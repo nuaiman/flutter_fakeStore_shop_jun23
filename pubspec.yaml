@@ -2,13 +2,13 @@ name: fake_store_shop_app
 description: A new Flutter project.
 publish_to: 'none'
 
-
 version: 1.0.0+1
 
 environment:
   sdk: '>=3.0.2 <4.0.0'
 dependencies:
   cupertino_icons: ^1.0.2
+  fast_cached_network_image: ^1.2.0
   flutter:
     sdk: flutter
   flutter_riverpod: ^2.3.6
@@ -24,7 +24,6 @@ flutter:
   # assets:
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
-
   # fonts:
   #   - family: Schyler
   #     fonts:
@@ -36,4 +35,3 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
-
