@@ -55,13 +55,10 @@ class ProductCard extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                TextButton(
+                TextButton.icon(
                   onPressed: () {},
-                  child: const Icon(Icons.favorite_border),
-                ),
-                TextButton(
-                  onPressed: () {},
-                  child: const Icon(Icons.add_shopping_cart_sharp),
+                  icon: const Icon(Icons.add_shopping_cart_sharp),
+                  label: const Text('Add to Cart'),
                 ),
               ],
             ),

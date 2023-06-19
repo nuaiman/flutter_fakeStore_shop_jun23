@@ -16,24 +16,16 @@ class ProductDetailsView extends StatelessWidget {
         width: double.infinity,
         height: 70,
         color: Colors.indigoAccent,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            TextButton(
-              onPressed: () {},
-              child: const Icon(
-                Icons.favorite_border,
-                color: Colors.white,
-              ),
-            ),
-            TextButton(
-              onPressed: () {},
-              child: const Icon(
-                Icons.add_shopping_cart_sharp,
-                color: Colors.white,
-              ),
-            ),
-          ],
+        child: TextButton.icon(
+          onPressed: () {},
+          icon: const Icon(
+            Icons.add_shopping_cart_sharp,
+            color: Colors.white,
+          ),
+          label: const Text(
+            'Add to Cart',
+            style: TextStyle(color: Colors.white),
+          ),
         ),
       ),
       body: SingleChildScrollView(
