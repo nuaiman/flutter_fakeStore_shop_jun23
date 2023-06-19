@@ -1,8 +1,16 @@
 import 'package:fake_store_shop_app/features/products/view/products_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:path_provider/path_provider.dart';
 
-void main() {
+import 'models/cart.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final directory = await getApplicationDocumentsDirectory();
+  Hive.init(directory.path);
+  Hive.registerAdapter<Cart>(CartAdapter());
   runApp(const ProviderScope(child: MyApp()));
 }
 

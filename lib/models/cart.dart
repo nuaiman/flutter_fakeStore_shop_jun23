@@ -1,11 +1,19 @@
 import 'dart:convert';
 
 import 'package:fake_store_shop_app/models/product.dart';
+import 'package:hive/hive.dart';
 
+part 'cart.g.dart';
+
+@HiveType(typeId: 0)
 class Cart {
+  @HiveField(0)
   final String id;
+  @HiveField(1)
   final Product product;
+  @HiveField(2)
   final int quantity;
+  @HiveField(3)
   final double totalAmount;
   Cart({
     required this.id,
