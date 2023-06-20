@@ -2,6 +2,7 @@ import 'package:fake_store_shop_app/features/cart/controller/cart_controller.dar
 import 'package:fake_store_shop_app/features/products/view/product_details_view.dart';
 import 'package:fake_store_shop_app/models/cart.dart';
 import 'package:fake_store_shop_app/models/product.dart';
+import 'package:fast_cached_network_image/fast_cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -33,7 +34,14 @@ class ProductCard extends ConsumerWidget {
                   height: 200,
                   width: 150,
                   color: Colors.white,
-                  child: Image.network(item.image),
+                  child: FastCachedImage(
+                    url: item.image,
+                    errorBuilder: (context, exception, stacktrace) {
+                      return const Center(
+                        child: Icon(Icons.image),
+                      );
+                    },
+                  ),
                 ),
                 const SizedBox(width: 20),
                 Expanded(

@@ -19,20 +19,17 @@ class CartAdapter extends TypeAdapter<Cart> {
     return Cart(
       id: fields[0] as String,
       product: (fields[1] as Map).cast<String, dynamic>(),
-      quantity: fields[2] as int?,
     );
   }
 
   @override
   void write(BinaryWriter writer, Cart obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(2)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.product)
-      ..writeByte(2)
-      ..write(obj.quantity);
+      ..write(obj.product);
   }
 
   @override

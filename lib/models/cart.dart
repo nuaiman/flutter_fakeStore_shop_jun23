@@ -11,23 +11,18 @@ class Cart {
   final String id;
   @HiveField(1)
   final Map<String, dynamic> product;
-  @HiveField(2)
-  int? quantity;
   Cart({
     required this.id,
     required this.product,
-    this.quantity = 1,
   });
 
   Cart copyWith({
     String? id,
     Map<String, dynamic>? product,
-    int? quantity,
   }) {
     return Cart(
       id: id ?? this.id,
       product: product ?? this.product,
-      quantity: quantity ?? this.quantity,
     );
   }
 
@@ -36,9 +31,6 @@ class Cart {
 
     result.addAll({'id': id});
     result.addAll({'product': product});
-    if (quantity != null) {
-      result.addAll({'quantity': quantity});
-    }
 
     return result;
   }
@@ -47,7 +39,6 @@ class Cart {
     return Cart(
       id: map['id'] ?? '',
       product: Map<String, dynamic>.from(map['product']),
-      quantity: map['quantity']?.toInt(),
     );
   }
 
@@ -56,18 +47,15 @@ class Cart {
   factory Cart.fromJson(String source) => Cart.fromMap(json.decode(source));
 
   @override
-  String toString() => 'Cart(id: $id, product: $product, quantity: $quantity)';
+  String toString() => 'Cart(id: $id, product: $product)';
 
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
 
-    return other is Cart &&
-        other.id == id &&
-        mapEquals(other.product, product) &&
-        other.quantity == quantity;
+    return other is Cart && other.id == id && mapEquals(other.product, product);
   }
 
   @override
-  int get hashCode => id.hashCode ^ product.hashCode ^ quantity.hashCode;
+  int get hashCode => id.hashCode ^ product.hashCode;
 }

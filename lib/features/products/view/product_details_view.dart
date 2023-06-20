@@ -1,13 +1,20 @@
 import 'package:fake_store_shop_app/models/product.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProductDetailsView extends StatelessWidget {
+import '../../../models/cart.dart';
+import '../../cart/controller/cart_controller.dart';
+
+class ProductDetailsView extends ConsumerWidget {
   const ProductDetailsView({super.key, required this.item});
 
   final Product item;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final listOfCartItems = ref.watch(cartControllerProvider);
+    final isItemInCart = listOfCartItems
+        .contains(Cart(id: item.id.toString(), product: item.toMap()));
     return Scaffold(
       appBar: AppBar(
         title: Text(item.title),
@@ -17,14 +24,22 @@ class ProductDetailsView extends StatelessWidget {
         height: 70,
         color: Colors.indigoAccent,
         child: TextButton.icon(
-          onPressed: () {},
-          icon: const Icon(
-            Icons.add_shopping_cart_sharp,
+          onPressed: isItemInCart
+              ? () {
+                  ref
+                      .read(cartControllerProvider.notifier)
+                      .removeFromCart(item);
+                }
+              : () {
+                  ref.read(cartControllerProvider.notifier).addToCart(item);
+                },
+          icon: Icon(
+            isItemInCart ? Icons.check : Icons.add_shopping_cart_sharp,
             color: Colors.white,
           ),
-          label: const Text(
-            'Add to Cart',
-            style: TextStyle(color: Colors.white),
+          label: Text(
+            isItemInCart ? 'Already In Cart' : 'Add to Cart',
+            style: const TextStyle(color: Colors.white),
           ),
         ),
       ),
