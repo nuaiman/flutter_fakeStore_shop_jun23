@@ -64,9 +64,9 @@ class ProductCard extends ConsumerWidget {
                 TextButton.icon(
                   onPressed: isItemInCart
                       ? () {
-                          // ref
-                          //     .read(cartControllerProvider.notifier)
-                          //     .removeFromCart(item);
+                          ref
+                              .read(cartControllerProvider.notifier)
+                              .removeFromCart(item);
                         }
                       : () {
                           ref

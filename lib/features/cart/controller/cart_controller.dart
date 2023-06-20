@@ -21,20 +21,23 @@ class CartControllerNotifier extends StateNotifier<List<Cart>> {
       product: product.toMap(),
     );
 
-    Hive.box<Cart>('cart').add(newCartItem);
+    // Hive.box<Cart>('cart').add(newCartItem);
+    Hive.box<Cart>('cart').put(newCartItem.id, newCartItem);
 
     state = [newCartItem, ...state];
   }
 
-  // void removeFromCart(Product product) {
-  //   List<Cart> newList = state;
-  //   newList.removeWhere((element) => element.id == product.id.toString());
-  //   Hive.box<Cart>('cart').add(Cart(
-  //     id: product.id.toString(),
-  //     product: product.toMap(),
-  //   ));
-  //   state = [...newList];
-  // }
+  List<Cart> removeFromCart(Product product) {
+    List<Cart> newList = [...state];
+
+    newList.removeWhere((element) => element.id == product.id.toString());
+
+    state = [...newList];
+
+    Hive.box<Cart>('cart').delete(product.id.toString());
+
+    return state;
+  }
 }
 // -----------------------------------------------------------------------------
 
