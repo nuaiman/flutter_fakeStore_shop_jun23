@@ -11,6 +11,7 @@ void main() async {
   final directory = await getApplicationDocumentsDirectory();
   Hive.init(directory.path);
   Hive.registerAdapter<Cart>(CartAdapter());
+  await Hive.openBox<Cart>('cart');
   runApp(const ProviderScope(child: MyApp()));
 }
 

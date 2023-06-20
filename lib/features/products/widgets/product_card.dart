@@ -1,14 +1,20 @@
+import 'package:fake_store_shop_app/features/cart/controller/cart_controller.dart';
 import 'package:fake_store_shop_app/features/products/view/product_details_view.dart';
+import 'package:fake_store_shop_app/models/cart.dart';
 import 'package:fake_store_shop_app/models/product.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class ProductCard extends StatelessWidget {
+class ProductCard extends ConsumerWidget {
   const ProductCard({super.key, required this.item});
 
   final Product item;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final listOfCartItems = ref.watch(cartControllerProvider);
+    final isItemInCart = listOfCartItems
+        .contains(Cart(id: item.id.toString(), product: item.toMap()));
     return GestureDetector(
       onTap: () {
         Navigator.of(context).push(
@@ -56,9 +62,21 @@ class ProductCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 TextButton.icon(
-                  onPressed: () {},
-                  icon: const Icon(Icons.add_shopping_cart_sharp),
-                  label: const Text('Add to Cart'),
+                  onPressed: isItemInCart
+                      ? () {
+                          // ref
+                          //     .read(cartControllerProvider.notifier)
+                          //     .removeFromCart(item);
+                        }
+                      : () {
+                          ref
+                              .read(cartControllerProvider.notifier)
+                              .addToCart(item);
+                        },
+                  icon: Icon(isItemInCart
+                      ? Icons.check
+                      : Icons.add_shopping_cart_sharp),
+                  label: Text(isItemInCart ? 'Already In Cart' : 'Add to Cart'),
                 ),
               ],
             ),

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:fake_store_shop_app/models/product.dart';
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 
 part 'cart.g.dart';
@@ -10,29 +10,24 @@ class Cart {
   @HiveField(0)
   final String id;
   @HiveField(1)
-  final Product product;
+  final Map<String, dynamic> product;
   @HiveField(2)
-  final int quantity;
-  @HiveField(3)
-  final double totalAmount;
+  int? quantity;
   Cart({
     required this.id,
     required this.product,
-    required this.quantity,
-    required this.totalAmount,
+    this.quantity = 1,
   });
 
   Cart copyWith({
     String? id,
-    Product? product,
+    Map<String, dynamic>? product,
     int? quantity,
-    double? totalAmount,
   }) {
     return Cart(
       id: id ?? this.id,
       product: product ?? this.product,
       quantity: quantity ?? this.quantity,
-      totalAmount: totalAmount ?? this.totalAmount,
     );
   }
 
@@ -40,9 +35,10 @@ class Cart {
     final result = <String, dynamic>{};
 
     result.addAll({'id': id});
-    result.addAll({'product': product.toMap()});
-    result.addAll({'quantity': quantity});
-    result.addAll({'totalAmount': totalAmount});
+    result.addAll({'product': product});
+    if (quantity != null) {
+      result.addAll({'quantity': quantity});
+    }
 
     return result;
   }
@@ -50,9 +46,8 @@ class Cart {
   factory Cart.fromMap(Map<String, dynamic> map) {
     return Cart(
       id: map['id'] ?? '',
-      product: Product.fromMap(map['product']),
-      quantity: map['quantity']?.toInt() ?? 0,
-      totalAmount: map['totalAmount']?.toDouble() ?? 0.0,
+      product: Map<String, dynamic>.from(map['product']),
+      quantity: map['quantity']?.toInt(),
     );
   }
 
@@ -61,9 +56,7 @@ class Cart {
   factory Cart.fromJson(String source) => Cart.fromMap(json.decode(source));
 
   @override
-  String toString() {
-    return 'Cart(id: $id, product: $product, quantity: $quantity, totalAmount: $totalAmount)';
-  }
+  String toString() => 'Cart(id: $id, product: $product, quantity: $quantity)';
 
   @override
   bool operator ==(Object other) {
@@ -71,16 +64,10 @@ class Cart {
 
     return other is Cart &&
         other.id == id &&
-        other.product == product &&
-        other.quantity == quantity &&
-        other.totalAmount == totalAmount;
+        mapEquals(other.product, product) &&
+        other.quantity == quantity;
   }
 
   @override
-  int get hashCode {
-    return id.hashCode ^
-        product.hashCode ^
-        quantity.hashCode ^
-        totalAmount.hashCode;
-  }
+  int get hashCode => id.hashCode ^ product.hashCode ^ quantity.hashCode;
 }

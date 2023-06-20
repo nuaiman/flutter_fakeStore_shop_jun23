@@ -9,17 +9,19 @@ class ProductsControllerNotifier extends StateNotifier<bool> {
   final ProductsApi _productsApi;
   ProductsControllerNotifier({required ProductsApi productsApi})
       : _productsApi = productsApi,
-        super(false);
+        super(true);
 
   Future<List<dynamic>> getAllProducts() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     final response = await _productsApi.getAllProducts();
     final decodedData = jsonDecode(response.body);
     if (decodedData != null) {
-      prefs.setString('products', json.encode(decodedData));
+      await prefs.clear();
+      await prefs.setString('products', json.encode(decodedData));
     }
     final listOfProducts =
         decodedData.map((product) => Product.fromMap(product)).toList();
+    state = false;
     return listOfProducts;
   }
 
@@ -30,12 +32,14 @@ class ProductsControllerNotifier extends StateNotifier<bool> {
     final result = json.decode(prefsResult!);
     final listOfProducts =
         result.map((product) => Product.fromMap(product)).toList();
+    state = false;
     return listOfProducts;
   }
 }
 // -----------------------------------------------------------------------------
 
-final productsControllerProvider = StateNotifierProvider((ref) {
+final productsControllerProvider =
+    StateNotifierProvider<ProductsControllerNotifier, bool>((ref) {
   final productsApi = ref.watch(productsApiProvider);
   return ProductsControllerNotifier(productsApi: productsApi);
 });

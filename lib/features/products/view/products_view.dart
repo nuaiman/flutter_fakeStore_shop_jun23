@@ -3,6 +3,7 @@ import 'package:fake_store_shop_app/features/cart/view/cart_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../cart/controller/cart_controller.dart';
 import '../controller/products_controller.dart';
 import '../widgets/product_card.dart';
 
@@ -30,6 +31,8 @@ class _ProductsViewState extends ConsumerState<ProductsView> {
       _getProductsFuture =
           ref.read(productsControllerProvider.notifier).getProductsFromPrefs();
     }
+
+    ref.read(cartControllerProvider.notifier).getItemsFromHive();
   }
 
   @override
@@ -40,41 +43,48 @@ class _ProductsViewState extends ConsumerState<ProductsView> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-      future: checkConnectivity(),
-      builder: (context, snapshotConnectivity) =>
-          snapshotConnectivity.connectionState == ConnectionState.waiting
-              ? const Center(
-                  child: CircularProgressIndicator(),
-                )
-              : FutureBuilder(
-                  future: _getProductsFuture,
-                  builder: (context, snapshot) => snapshot.connectionState ==
-                          ConnectionState.waiting
-                      ? const Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : Scaffold(
-                          appBar: AppBar(
-                            title: const Text('Products'),
-                            actions: [
-                              IconButton(
-                                onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                    builder: (context) => const CartView(),
-                                  ));
-                                },
-                                icon: const Icon(Icons.shopping_cart),
-                              ),
-                            ],
+    final isGettingProducts = ref.watch(productsControllerProvider);
+    return isGettingProducts
+        ? const Center(
+            child: CircularProgressIndicator(),
+          )
+        : FutureBuilder(
+            future: checkConnectivity(),
+            builder: (context, snapshotConnectivity) => snapshotConnectivity
+                        .connectionState ==
+                    ConnectionState.waiting
+                ? const Center(
+                    child: CircularProgressIndicator(),
+                  )
+                : FutureBuilder(
+                    future: _getProductsFuture,
+                    builder: (context, snapshot) => snapshot.connectionState ==
+                            ConnectionState.waiting
+                        ? const Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : Scaffold(
+                            appBar: AppBar(
+                              title: const Text('Products'),
+                              actions: [
+                                IconButton(
+                                  onPressed: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
+                                      builder: (context) => const CartView(),
+                                    ));
+                                  },
+                                  icon: const Icon(Icons.shopping_cart),
+                                ),
+                              ],
+                            ),
+                            body: ListView.builder(
+                              itemCount: snapshot.data!.length,
+                              itemBuilder: (context, index) =>
+                                  ProductCard(item: snapshot.data![index]),
+                            ),
                           ),
-                          body: ListView.builder(
-                            itemCount: snapshot.data!.length,
-                            itemBuilder: (context, index) =>
-                                ProductCard(item: snapshot.data![index]),
-                          ),
-                        ),
-                ),
-    );
+                  ),
+          );
   }
 }
